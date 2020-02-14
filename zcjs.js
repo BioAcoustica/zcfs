@@ -10,6 +10,7 @@ class ZCJS {
     this._x_range = "ms";
     this._y_range = "nonzero";
     this._y_fixed = true;
+    this._x_compress = false;
   }
 
   x_range(range) {
@@ -18,6 +19,10 @@ class ZCJS {
 
   y_range(range) {
     this._y_range = range;
+  }
+
+  x_compress(value) {
+    this._x_compress = value;
   }
 
   noStats() {
@@ -33,7 +38,28 @@ class ZCJS {
   setData(time, freq) {
     this._time = time;
     this._freq = freq;
+    if (this._x_compress) { this.do_x_compress(); };
     this.plotZC();
+  }
+
+  do_x_compress() {
+    var cutoff = 0.001;
+    if (Array.isArray(this._y_range)) {
+      cutoff =this._y_range[0];
+    }
+    this._c_time = [];
+    this._c_freq = [];
+
+    var compressed_time = 0;
+    var instance = this;
+
+    this._freq.forEach(function(item, index) {
+      if (item > cutoff) {
+        instance._c_freq.push(instance._freq[index]);
+        instance._c_time.push(compressed_time);
+        compressed_time += instance._time[index] - instance._time[index - 1];
+      }
+    });
   }
 
   process_url() {
@@ -105,8 +131,8 @@ class ZCJS {
 
     Plotly.plot( zcplot,
         [{
-           x: this._time,
-           y: this._freq,
+           x: this._x_compress ? this._c_time : this._time,
+           y: this._x_compress ? this._c_freq : this._freq,
            type: 'scatter',
            mode: 'markers',
            marker: {size: 3}
