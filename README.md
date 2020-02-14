@@ -4,7 +4,7 @@
 The library can be included from the audioBLAST CDN:
 
 ```html
-<script type="text/javascript" src="https://cdn.audioblast.org/zcjs/zcjs.js"><script>
+<script type="text/javascript" src="https://cdn.audioblast.org/zcjs/zcjs.js"></script>
 ```
 A HTML element for the plot should be created in the desired position on the page:
 
@@ -33,7 +33,47 @@ It is possible to directly plot data, both inputs should be numerical arrays of 
 ```
 
 ## Plotting Options
+The default plot values are meant to provide acceptable output in the majority of cases, however they may need to be tweaked. These options are designed to be independant of the library used for plotting.
 
+To use the plotting functionality you will need to include a plotting library alongside this library:
+
+```html
+<script type="text/javascript" src="https://cdn.audioblast.org/zcjs/zcjs.js"></script>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+```
+
+### x-axis
+The default setting for `x_range` is `"ms"` giving an expanded view of a zero-crossing file suitable for bats. A value of `"auto"` will fit the dataset to the available screen width. An array may be used to specify the initial range to display.
+
+```javascript
+p.x_range = "ms";
+p.x_range = "auto";
+p.x_range = [0,2.5];
+```
+
+### y-axis
+The default setting for `y_range` is `"nonzero"` which fits the axis to the available screen height ignoring any zero values. A value of `"auto"` will fit all data into the plot. An array may be used to specify the initial range to display.
+
+```javascript
+p.y_range = "nonzero";
+p.y_range = "auto";
+p.y_range = [10000,120000];
+```
+
+By default zooming of the y axis is prevented, so the zoom functionality of the plots only zooms the time (x) axis. This may be changed as follows:
+
+```javascript
+p.y_fixed = false;
+```
+
+### Time compression
+Time compression removes periods where there is no acoustic activity. This is identified by a frequency value less than the lowest displayed when y_range is specified as an array, or otherwise below 0.001.
+
+```javascript
+p.x_compress = true;
+```
+
+This process skews the time axis, so that values on that axis no longer relate to positions within the original file. For annotation purposes it is possible to use the properties `_c_time` and `_c_time_orig` to map to the original time.
 
 ## Background
 This library follows the R code [AnabatTools](http://peterwilson.id.au/Rcode/AnabatTools.R) by Peter Wilson to read Anabat data. This work itself was made possible by Chris Corben's documention of the [Anabat File Format](http://users.lmi.net/corben/fileform.htm#Anabat%20File%20Formats). This library was originally designed for visualising zero-crossing files for the [BioAcoustica](http://bio.acousti.ca) project. Hosting is provided by [audioBLAST](https://audioblast.org).
