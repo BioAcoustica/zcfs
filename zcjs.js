@@ -75,16 +75,16 @@ class ZCJS {
 
   readAnabat() {
     var parameterPoint = this._fileRawData[0] + 256 * this._fileRawData[1];
-    var params = ZCJS.getParams(parameterPoint, this._fileRawData);
+    var params = this.getParams(parameterPoint);
     var dataPoint  = this._fileRawData[parameterPoint] + 256 * this._fileRawData[parameterPoint + 1] - 1;
     var timeResult = null;
     if (this._fileVendorVersion == 129) {
-      timeResult = ZCJS.getData129(dataPoint, params, rawData);
+      timeResult = this.getData129(dataPoint, params, rawData);
     } else {
-      timeResult = ZCJS.getData130(dataPoint, params, this._fileVendorVersion, this._fileRawData);
+      timeResult = this.getData130(dataPoint, params, this._fileVendorVersion, this._fileRawData);
     }
 
-    var freqResult = ZCJS.calcfreq(params, timeResult.timeData, timeResult.last_t);
+    var freqResult = this.calcfreq(params, timeResult.timeData, timeResult.last_t);
     var freq = freqResult.freq;
     var showDot = freqResult.showDot;
 
@@ -97,15 +97,15 @@ class ZCJS {
     };
     return(data);
   }
-  
-  static getParams(parameterPoint, rawData) {
-    var RES1 = rawData[parameterPoint + 2] + 256 * rawData[parameterPoint + 3];
+
+  getParams(parameterPoint) {
+    var RES1 = this._fileRawData[parameterPoint + 2] + 256 * this._fileRawData[parameterPoint + 3];
     var timeFactor = 1;
     if (RES1 != 25000) {
       timeFactor = 25000/RES1;
     }
-    var DIVRAT = rawData[parameterPoint + 4];
-    var VRES = rawData[parameterPoint + 5];
+    var DIVRAT = this._fileRawData[parameterPoint + 4];
+    var VRES = this._fileRawData[parameterPoint + 5];
     var params = {
       RES1: RES1,
       DIVRAT: DIVRAT,
@@ -114,13 +114,12 @@ class ZCJS {
     };
     return(params);
   }
-  
-  
-  static getData129(dataPoint, params, rawData) {
-  
+
+  getData129(dataPoint, params, rawData) {
+
   }
-  
-  static getData130(dataPoint, params, fileType, rawData) {
+
+  getData130(dataPoint, params, fileType, rawData) {
     var p = dataPoint;
     var time = 0;
     var dif = 0;
@@ -196,20 +195,20 @@ class ZCJS {
     };
     return(ret);
   }
-  
+
   static bitFlip(v, digits) {        return ~v & (Math.pow(2, digits) - 1);    }
-  
-  static calcfreq(params, timeData, N) {
+
+  calcfreq(params, timeData, N) {
     var DIVRAT = params.DIVRAT;
     var freq = Array(0,0);
     var showDot = Array(0,1);
     var t = 2;
-  
+
     var Tmin = Math.ceil(DIVRAT*4);
     var Tmax = Math.floor(DIVRAT*250);
     if (Tmin < 48) { Tmin = 48;}
     if (Tmax > 12589) { Tmax = 12589; }
-  
+
     while (t <= N) {
       var td = timeData[t] - timeData[t-2];
       if ((td >= Tmin) && (td <= Tmax)) {
