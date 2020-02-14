@@ -1,3 +1,6 @@
+//Library class
+function ZCFS {
+
 function plotZC(url, target) {
   var req = new XMLHttpRequest();
   req.open("GET", url, true);
@@ -187,4 +190,5 @@ function calcfreq(params, timeData, N) {
     showDot:showDot
   };
   return(ret);
+}
 }
