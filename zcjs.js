@@ -3,6 +3,12 @@ class ZCJS {
   constructor(target) {
     this._target = document.getElementById(target);
     this._plotMethod = "plotly";
+    this._stats = true;
+    this._version = 1.0;
+  }
+
+  noStats() {
+    this._stats = false;
   }
 
   setURL(newfile) {
@@ -38,14 +44,16 @@ class ZCJS {
   }
 
   stats(event) {
-    var path = '';
-    if (event == "plot") {
-      path = 'plot=' + this._plotMethod;
+    if (this._stats) { 
+      var path = 'version=' + this._version;
+      if (event == "plot") {
+        path = '&plot=' + this._plotMethod;
+      }
+     var url = "https://api.audioblast.org/zcjs/stats/?" + path;
+     var req = new XMLHttpRequest();
+     req.open("GET", url, true);
+     req.send();
     }
-   var url = "https://api.audioblast.org/zcjs/stats/?" + path;
-   var req = new XMLHttpRequest();
-   req.open("GET", url, true);
-   req.send();
   }
 
   plotZC() {
