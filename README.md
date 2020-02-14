@@ -1,7 +1,7 @@
 # zcjs: Zero-crossing visualisation in Javascript
 
 ## Basic Usage
-The library can be included from the audioBLAST CDN:
+The library can be included from the audioBLAST content delivery network (CDN):
 
 ```html
 <script type="text/javascript" src="https://cdn.audioblast.org/zcjs/zcjs.js"></script>
