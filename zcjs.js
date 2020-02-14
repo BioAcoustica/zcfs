@@ -72,7 +72,7 @@ class ZCJS {
     alert(head);
   }
 
-  stats(event) {
+  sendStats(event) {
     if (this.stats) { 
       var path = 'version=' + this._version;
       if (event == "plot") {
@@ -90,7 +90,7 @@ class ZCJS {
 
   plotZC() {
     if (this.plotMethod == "plotly") {this.plotPlotly();}
-    this.stats("plot");
+    this.sendStats("plot");
   }
 
   plotPlotly() {
