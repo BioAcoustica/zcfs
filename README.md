@@ -100,3 +100,5 @@ This functionality can easily be overriden as follows:
 
 ## Contributing
 Contributions and questions are welcomed. Please eithe [raise an issue](https://github.com/BioAcoustica/zcjs/issues) on GitHub or email edwbaker@gmail.com. Everyone is expected to follow the [Code of Conduct](https://github.com/BioAcoustica/zcjs/blob/master/CODE_OF_CONDUCT.md).
+
+The author is interested in receiving examples of the library in use, please feel free to email!
