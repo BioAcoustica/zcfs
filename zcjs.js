@@ -1,7 +1,10 @@
 //Library class
-function ZCFS {
+class ZCJS {
+constructor(target) {
+  this.target = target;
+}
 
-function plotZC(url, target) {
+plotZC(url, target) {
   var req = new XMLHttpRequest();
   req.open("GET", url, true);
   req.responseType = "arraybuffer";
@@ -9,7 +12,7 @@ function plotZC(url, target) {
     var arrayBuffer = req.response;
     if (arrayBuffer) {
       var rawData = new Uint8Array(arrayBuffer);
-      var data = readAnabat(url, rawData);
+      var data =ZCJS.readAnabat(url, rawData);
       data.timeData = data.timeData.map(function(element){return element/1000000;});
       var zcplot = document.getElementById(target);
       var plot_width = zcplot.clientWidth;
@@ -35,19 +38,19 @@ function plotZC(url, target) {
   req.send();
 }
 
-function readAnabat(name, rawData) {
+static readAnabat = function(name, rawData) {
   var nBytes = rawData.length;
   var fileType = rawData[3];
   var parameterPoint = rawData[0] + 256 * rawData[1];
-  var params = getParams(parameterPoint, rawData);
+  var params = ZCJS.getParams(parameterPoint, rawData);
   var dataPoint  = rawData[parameterPoint] + 256 * rawData[parameterPoint + 1] - 1;
   if (fileType == 129) {
-    var timeResult = getData129(dataPoint, params, rawData);
+    var timeResult = ZCJS.getData129(dataPoint, params, rawData);
   } else {
-    var timeResult = getData130(dataPoint, params, fileType, rawData);
+    var timeResult = ZCJS.getData130(dataPoint, params, fileType, rawData);
   }
   var RES1 = 25000;
-  var freqResult = calcfreq(params, timeResult.timeData, timeResult.last_t);
+  var freqResult = ZCJS.calcfreq(params, timeResult.timeData, timeResult.last_t);
   var freq = freqResult.freq;
   var showDot = freqResult.showDot;
 
@@ -61,7 +64,7 @@ function readAnabat(name, rawData) {
   return(data);
 }
 
-function getParams(parameterPoint, rawData) {
+static getParams = function(parameterPoint, rawData) {
   var RES1 = rawData[parameterPoint + 2] + 256 * rawData[parameterPoint + 3];
   if (RES1 != 25000) {
     var timeFactor = 25000/RES1;
@@ -80,11 +83,11 @@ function getParams(parameterPoint, rawData) {
 }
 
 
-function getData129(dataPoint, params, rawData) {
+static getData129 = function(dataPoint, params, rawData) {
 
 }
 
-function getData130(dataPoint, params, fileType, rawData) {
+static getData130 = function(dataPoint, params, fileType, rawData) {
   var p = dataPoint;
   var time = 0;
   var dif = 0;
@@ -100,7 +103,7 @@ function getData130(dataPoint, params, fileType, rawData) {
   while ((p < nBytes) && (t <  16384)) {
     if (rawData[p] < 128) {
       dif = rawData[p];
-      if (dif > 63) { dif = -1*(bitFlip(dif,6) + 1); }
+      if (dif > 63) { dif = -1*(ZCJS.bitFlip(dif,6) + 1); }
       lastdiff = lastdiff + dif;
       time = time + Math.floor(params.timeFactor * lastdiff + 0.5);
       timeData.push(time);
@@ -161,9 +164,9 @@ function getData130(dataPoint, params, fileType, rawData) {
   return(ret);
 }
 
-function bitFlip(v, digits) {        return ~v & (Math.pow(2, digits) - 1);    }
+static bitFlip = function(v, digits) {        return ~v & (Math.pow(2, digits) - 1);    }
 
-function calcfreq(params, timeData, N) {
+static calcfreq= function(params, timeData, N) {
   var DIVRAT = params.DIVRAT;
   var freq = Array(0,0);
   var showDot = Array(0,1);
