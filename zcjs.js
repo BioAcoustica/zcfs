@@ -2,31 +2,15 @@
 class ZCJS {
   constructor(target) {
     this._target = document.getElementById(target);
-    this._plotMethod = "plotly";
-    this._stats = true;
+    this.plotMethod = "plotly";
+    this.stats = true;
     this._version = 1.0;
     this._fileVendor = null;
     this._fileVendorVersion = null;
-    this._x_range = "ms";
-    this._y_range = "nonzero";
-    this._y_fixed = true;
-    this._x_compress = false;
-  }
-
-  x_range(range) {
-    this._x_range = range;
-  }
-
-  y_range(range) {
-    this._y_range = range;
-  }
-
-  x_compress(value) {
-    this._x_compress = value;
-  }
-
-  noStats() {
-    this._stats = false;
+    this.x_range = "ms";
+    this.y_range = "nonzero";
+    this.y_fixed = true;
+    this.x_compress = false;
   }
 
   setURL(newfile) {
@@ -38,14 +22,14 @@ class ZCJS {
   setData(time, freq) {
     this._time = time;
     this._freq = freq;
-    if (this._x_compress) { this.do_x_compress(); };
+    if (this.x_compress) { this.do_x_compress(); };
     this.plotZC();
   }
 
   do_x_compress() {
     var cutoff = 0.001;
-    if (Array.isArray(this._y_range)) {
-      cutoff =this._y_range[0];
+    if (Array.isArray(this.y_range)) {
+      cutoff =this.y_range[0];
     }
     this._c_time = [];
     this._c_freq = [];
@@ -89,10 +73,10 @@ class ZCJS {
   }
 
   stats(event) {
-    if (this._stats) { 
+    if (this.stats) { 
       var path = 'version=' + this._version;
       if (event == "plot") {
-        path = path + '&plot=' + this._plotMethod;
+        path = path + '&plot=' + this.plotMethod;
       }
       if (this._fileVendor != null) {
         path = path + "&fileVendor=" + this._fileVendor + "&fileVendorVersion=" + this._fileVendorVersion;
@@ -105,7 +89,7 @@ class ZCJS {
   }
 
   plotZC() {
-    if (this._plotMethod == "plotly") {this.plotPlotly();}
+    if (this.plotMethod == "plotly") {this.plotPlotly();}
     this.stats("plot");
   }
 
@@ -118,21 +102,21 @@ class ZCJS {
     var plotly_x_axis = {};
     var plotly_y_axis = {};
 
-    if (this._x_range == "ms") {
+    if (this.x_range == "ms") {
      plotly_x_axis = {range: [0, 900/plot_width]};
     }
 
-    if (this._y_range == "nonzero") {
-      plotly_y_axis = {fixedrange:this._y_fixed, range: [y_range_min, y_range_max]};
+    if (this.y_range == "nonzero") {
+      plotly_y_axis = {fixedrange:this.y_fixed, range: [y_range_min, y_range_max]};
     }
-    if (Array.isArray(this._y_range)) {
-      plotly_y_axis = {fixedrange:this._y_fixed, range: [this._y_range[0], this._y_range[1]]};
+    if (Array.isArray(this.y_range)) {
+      plotly_y_axis = {fixedrange:this.y_fixed, range: [this.y_range[0], this.y_range[1]]};
     }
 
     Plotly.plot( zcplot,
         [{
-           x: this._x_compress ? this._c_time : this._time,
-           y: this._x_compress ? this._c_freq : this._freq,
+           x: this.x_compress ? this._c_time : this._time,
+           y: this.x_compress ? this._c_freq : this._freq,
            type: 'scatter',
            mode: 'markers',
            marker: {size: 3}
