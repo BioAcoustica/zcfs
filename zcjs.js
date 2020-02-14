@@ -1,4 +1,4 @@
-/Library class
+//Library class
 class ZCJS {
   constructor(target) {
     this._target = document.getElementById(target);
@@ -25,8 +25,7 @@ class ZCJS {
     req.onload = function (event) {
       var arrayBuffer = req.response;
       if (arrayBuffer) {
-        var this._fileRawData = new Uint8Array(arrayBuffer);
-        instance._fileRawData = this._fileRawData;
+        instance._fileRawData = new Uint8Array(arrayBuffer);
         instance.identifyFile();
         if (instance._fileVendor == "Anabat") {
           var data = instance.readAnabat();
@@ -115,11 +114,11 @@ class ZCJS {
     return(params);
   }
 
-  getData129(dataPoint, params, this._fileRawData) {
-
+  getData129(dataPoint, params) {
+    //TODO
   }
 
-  getData130(dataPoint, params, fileType, this._fileRawData) {
+  getData130(dataPoint, params) {
     var p = dataPoint;
     var time = 0;
     var dif = 0;
@@ -143,7 +142,7 @@ class ZCJS {
         p++;
       } else {
         if (this._fileRawData[p] >= 224) {
-          if (fileType > 130) {
+          if (this._fileVendorVersion > 130) {
             if (p >= nBytes) {break;}
             var c = this._fileRawData[p] & 3;
             s = this._fileRawData[p+1];
@@ -196,7 +195,9 @@ class ZCJS {
     return(ret);
   }
 
-  static bitFlip(v, digits) {        return ~v & (Math.pow(2, digits) - 1);    }
+  static bitFlip(v, digits) {
+    return ~v & (Math.pow(2, digits) - 1);
+  }
 
   calcfreq(params, timeData, N) {
     var DIVRAT = params.DIVRAT;
