@@ -37,8 +37,20 @@ class ZCJS {
     req.send();
   }
 
+  stats(event) {
+    var path = '';
+    if (event == "plot") {
+      path = 'plot=' + this._plotMethod;
+    }
+   var url = "https://api.audioblast.org/zcjs/stats/?" + path;
+   var req = new XMLHttpRequest();
+   req.open("GET", url, true);
+   req.send();
+  }
+
   plotZC() {
     if (this._plotMethod == "plotly") {this.plotPlotly();}
+    this.stats("plot");
   }
 
   plotPlotly() {
