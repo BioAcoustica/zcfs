@@ -33,6 +33,7 @@ class ZCJS {
     }
     this._c_time = [];
     this._c_freq = [];
+    this._c_time_orig = [];
 
     var compressed_time = 0;
     var instance = this;
@@ -41,6 +42,7 @@ class ZCJS {
       if (item > cutoff) {
         instance._c_freq.push(instance._freq[index]);
         instance._c_time.push(compressed_time);
+        instance._c_time_orig.push(instance._time[index]);
         compressed_time += instance._time[index] - instance._time[index - 1];
       }
     });
