@@ -2,6 +2,7 @@
 class ZCJS {
   constructor(target) {
     this._target = document.getElementById(target);
+    this._plotMethod = "plotly";
   }
 
   setURL(newfile) {
@@ -34,6 +35,10 @@ class ZCJS {
   }
 
   plotZC() {
+    if (this._plotMethod == "plotly") {this.plotPlotly();}
+  }
+
+  plotPlotly() {
     var zcplot = this._target;
     var plot_width = zcplot.clientWidth;
     var x_range_max = 900  / plot_width;
