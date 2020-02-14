@@ -38,5 +38,20 @@ This library follows the R code [AnabatTools](http://peterwilson.id.au/Rcode/Ana
 ## Licence
 This work is licenced under the GNU Public License version 3.
 
+## Stats and privacy
+By default this library sends some usage data to the server at https://api.audioblast.org. These numbers help justify some of the effort spent on this library by the author to their employers. This data is rather basic. At present the only data sent are:
+* Library version (e.g. 1.0)
+* If you use the library to decode a file: what kind of file (e.g. Anabat 130)
+* If you make a plot, what plotting library is used (e.g. Plotly)
+This data is sent asynchonously only after the action it relates to has been performed so it should not interfere with the speed at which the library operates.
+
+This functionality can easily be overriden as follows:
+```html
+<script type="text/javascript">
+  var p = new ZCJS();
+  p.noStats();
+</script>
+```
+
 ## Contributing
 Contributions and questions are welcomed. Please eithe [raise an issue](https://github.com/BioAcoustica/zcjs/issues) on GitHub or email edwbaker@gmail.com. Everyone is expected to follow the [Code of Conduct](https://github.com/BioAcoustica/zcjs/blob/master/CODE_OF_CONDUCT.md).
