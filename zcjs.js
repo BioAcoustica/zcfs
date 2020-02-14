@@ -1,43 +1,60 @@
 //Library class
 class ZCJS {
   constructor(target) {
-    this.target = target;
+    this._target = document.getElementById(target);
   }
 
-  plotZC(url) {
+  setURL(newfile) {
+    this._url= newfile;
+    this._source = "url";
+    this.process_url();
+  }
+
+  setData(time, freq) {
+    this._time = time;
+    this._freq = freq;
+    this.plotZC();
+  }
+
+  process_url() {
+    var instance = this;
     var req = new XMLHttpRequest();
-    var zcplot = document.getElementById(this.target);
-    req.open("GET", url, true);
+    req.open("GET", this._url, true);
     req.responseType = "arraybuffer";
     req.onload = function (event) {
       var arrayBuffer = req.response;
       if (arrayBuffer) {
         var rawData = new Uint8Array(arrayBuffer);
-        var data =ZCJS.readAnabat(url, rawData);
+        var data = ZCJS.readAnabat(instance._url, rawData);
         data.timeData = data.timeData.map(function(element){return element/1000000;});
-        var plot_width = zcplot.clientWidth;
-        var x_range_max = 900  / plot_width;
-        var y_range_min = Math.min.apply(null, data.frequencyData.filter(Boolean));
-        var y_range_max = Math.max.apply(Math, data.frequencyData);
-        Plotly.plot( zcplot,
-            [{
-               x: data.timeData,
-               y: data.frequencyData,
-               type: 'scatter',
-               mode: 'markers',
-               marker: {size: 3}
-            }],
-            {
-              margin: { t: 0 },
-              xaxis: {range: [0, x_range_max]},
-              yaxis: {fixedrange: true, range: [y_range_min, y_range_max]}
-            }
-        );
+        instance.setData(data.timeData, data.frequencyData);
       }
-    };
+    }
     req.send();
   }
-  
+
+  plotZC() {
+    var zcplot = this._target;
+    var plot_width = zcplot.clientWidth;
+    var x_range_max = 900  / plot_width;
+    var y_range_min = Math.min.apply(null, this._freq.filter(Boolean));
+    var y_range_max = Math.max.apply(Math, this._freq);
+    Plotly.plot( zcplot,
+        [{
+           x: this._time,
+           y: this._freq,
+           type: 'scatter',
+           mode: 'markers',
+           marker: {size: 3}
+        }],
+        {
+          margin: { t: 0 },
+          xaxis: {range: [0, x_range_max]},
+          yaxis: {fixedrange: true, range: [y_range_min, y_range_max]}
+        }
+    );
+  }
+
   static readAnabat(name, rawData) {
     //var nBytes = rawData.length;
     var fileType = rawData[3];
