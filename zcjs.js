@@ -26,9 +26,13 @@ class ZCJS {
       var arrayBuffer = req.response;
       if (arrayBuffer) {
         var rawData = new Uint8Array(arrayBuffer);
-        var data = ZCJS.readAnabat(instance._url, rawData);
-        data.timeData = data.timeData.map(function(element){return element/1000000;});
-        instance.setData(data.timeData, data.frequencyData);
+        instance._fileRawData = rawData;
+        instance.identifyFile();
+        if (instance._fileVendor == "Anabat") {
+          var data = instance.readAnabat();
+          data.timeData = data.timeData.map(function(element){return element/1000000;});
+          instance.setData(data.timeData, data.frequencyData);
+        }
       }
     }
     req.send();
@@ -60,25 +64,32 @@ class ZCJS {
     );
   }
 
-  static readAnabat(name, rawData) {
-    //var nBytes = rawData.length;
-    var fileType = rawData[3];
-    var parameterPoint = rawData[0] + 256 * rawData[1];
-    var params = ZCJS.getParams(parameterPoint, rawData);
-    var dataPoint  = rawData[parameterPoint] + 256 * rawData[parameterPoint + 1] - 1;
+  identifyFile() {
+    var check_anabat = this._fileRawData[3];
+    var anabats = [129, 130, 131, 132];
+    if (anabats.includes(check_anabat)) {
+      this._fileVendor = "Anabat";
+      this._fileVendorVersion = check_anabat;
+    }
+  }
+
+  readAnabat() {
+    var parameterPoint = this._fileRawData[0] + 256 * this._fileRawData[1];
+    var params = ZCJS.getParams(parameterPoint, this._fileRawData);
+    var dataPoint  = this._fileRawData[parameterPoint] + 256 * this._fileRawData[parameterPoint + 1] - 1;
     var timeResult = null;
-    if (fileType == 129) {
+    if (this._fileVendorVersion == 129) {
       timeResult = ZCJS.getData129(dataPoint, params, rawData);
     } else {
-      timeResult = ZCJS.getData130(dataPoint, params, fileType, rawData);
+      timeResult = ZCJS.getData130(dataPoint, params, this._fileVendorVersion, this._fileRawData);
     }
-    //var RES1 = 25000;
+
     var freqResult = ZCJS.calcfreq(params, timeResult.timeData, timeResult.last_t);
     var freq = freqResult.freq;
     var showDot = freqResult.showDot;
-  
+
     //TODO: need badPts?
-  
+
     var data = {
       frequencyData: freq,
       showDot: showDot,
