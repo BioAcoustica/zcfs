@@ -3,9 +3,10 @@ class ZCJS {
   constructor(target) {
     this.target = target;
   }
-  
-  plotZC(url, target) {
+
+  plotZC(url) {
     var req = new XMLHttpRequest();
+    var zcplot = document.getElementById(this.target);
     req.open("GET", url, true);
     req.responseType = "arraybuffer";
     req.onload = function (event) {
@@ -14,7 +15,6 @@ class ZCJS {
         var rawData = new Uint8Array(arrayBuffer);
         var data =ZCJS.readAnabat(url, rawData);
         data.timeData = data.timeData.map(function(element){return element/1000000;});
-        var zcplot = document.getElementById(target);
         var plot_width = zcplot.clientWidth;
         var x_range_max = 900  / plot_width;
         var y_range_min = Math.min.apply(null, data.frequencyData.filter(Boolean));
@@ -26,7 +26,7 @@ class ZCJS {
                type: 'scatter',
                mode: 'markers',
                marker: {size: 3}
-            }], 
+            }],
             {
               margin: { t: 0 },
               xaxis: {range: [0, x_range_max]},
