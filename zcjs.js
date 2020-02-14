@@ -7,6 +7,17 @@ class ZCJS {
     this._version = 1.0;
     this._fileVendor = null;
     this._fileVendorVersion = null;
+    this._x_range = "ms";
+    this._y_range = "nonzero";
+    this._y_fixed = true;
+  }
+
+  x_range(range) {
+    this._x_range = range;
+  }
+
+  y_range(range) {
+    this._y_range = range;
   }
 
   noStats() {
@@ -45,6 +56,12 @@ class ZCJS {
     req.send();
   }
 
+  anabatHeader() {
+    var head = this._fileRawData.slice(6,281);
+    var texthead = String.fromCharCode(head);
+    alert(head);
+  }
+
   stats(event) {
     if (this._stats) { 
       var path = 'version=' + this._version;
@@ -69,9 +86,23 @@ class ZCJS {
   plotPlotly() {
     var zcplot = this._target;
     var plot_width = zcplot.clientWidth;
-    var x_range_max = 900  / plot_width;
     var y_range_min = Math.min.apply(null, this._freq.filter(Boolean));
     var y_range_max = Math.max.apply(Math, this._freq);
+
+    var plotly_x_axis = {};
+    var plotly_y_axis = {};
+
+    if (this._x_range == "ms") {
+     plotly_x_axis = {range: [0, 900/plot_width]};
+    }
+
+    if (this._y_range == "nonzero") {
+      plotly_y_axis = {fixedrange:this._y_fixed, range: [y_range_min, y_range_max]};
+    }
+    if (Array.isArray(this._y_range)) {
+      plotly_y_axis = {fixedrange:this._y_fixed, range: [this._y_range[0], this._y_range[1]]};
+    }
+
     Plotly.plot( zcplot,
         [{
            x: this._time,
@@ -82,8 +113,8 @@ class ZCJS {
         }],
         {
           margin: { t: 0 },
-          xaxis: {range: [0, x_range_max]},
-          yaxis: {fixedrange: true, range: [y_range_min, y_range_max]}
+          xaxis: plotly_x_axis,
+          yaxis: plotly_y_axis
         }
     );
   }
