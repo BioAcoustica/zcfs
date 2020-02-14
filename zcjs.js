@@ -5,6 +5,8 @@ class ZCJS {
     this._plotMethod = "plotly";
     this._stats = true;
     this._version = 1.0;
+    this._fileVendor = null;
+    this._fileVendorVersion = null;
   }
 
   noStats() {
@@ -47,12 +49,15 @@ class ZCJS {
     if (this._stats) { 
       var path = 'version=' + this._version;
       if (event == "plot") {
-        path = '&plot=' + this._plotMethod;
+        path = path + '&plot=' + this._plotMethod;
       }
-     var url = "https://api.audioblast.org/zcjs/stats/?" + path;
-     var req = new XMLHttpRequest();
-     req.open("GET", url, true);
-     req.send();
+      if (this._fileVendor != null) {
+        path = path + "&fileVendor=" + this._fileVendor + "&fileVendorVersion=" + this._fileVendorVersion;
+      }
+      var url = "https://api.audioblast.org/zcjs/stats/?" + path;
+      var req = new XMLHttpRequest();
+      req.open("GET", url, true);
+      req.send();
     }
   }
 
