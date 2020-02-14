@@ -1,4 +1,4 @@
-//Library class
+/Library class
 class ZCJS {
   constructor(target) {
     this._target = document.getElementById(target);
@@ -25,8 +25,8 @@ class ZCJS {
     req.onload = function (event) {
       var arrayBuffer = req.response;
       if (arrayBuffer) {
-        var rawData = new Uint8Array(arrayBuffer);
-        instance._fileRawData = rawData;
+        var this._fileRawData = new Uint8Array(arrayBuffer);
+        instance._fileRawData = this._fileRawData;
         instance.identifyFile();
         if (instance._fileVendor == "Anabat") {
           var data = instance.readAnabat();
@@ -79,7 +79,7 @@ class ZCJS {
     var dataPoint  = this._fileRawData[parameterPoint] + 256 * this._fileRawData[parameterPoint + 1] - 1;
     var timeResult = null;
     if (this._fileVendorVersion == 129) {
-      timeResult = this.getData129(dataPoint, params, rawData);
+      timeResult = this.getData129(dataPoint, params, this._fileRawData);
     } else {
       timeResult = this.getData130(dataPoint, params, this._fileVendorVersion, this._fileRawData);
     }
@@ -115,11 +115,11 @@ class ZCJS {
     return(params);
   }
 
-  getData129(dataPoint, params, rawData) {
+  getData129(dataPoint, params, this._fileRawData) {
 
   }
 
-  getData130(dataPoint, params, fileType, rawData) {
+  getData130(dataPoint, params, fileType, this._fileRawData) {
     var p = dataPoint;
     var time = 0;
     var dif = 0;
@@ -128,13 +128,13 @@ class ZCJS {
     var s = 0;
     var timeData = [];
     var showDot = new Array(0,1);
-    var nBytes = rawData.length;
+    var nBytes = this._fileRawData.length;
   
     if ((params.RES1 > 60000) || (params.RES1 < 10000)) { return(null); }
   
     while ((p < nBytes) && (t <  16384)) {
-      if (rawData[p] < 128) {
-        dif = rawData[p];
+      if (this._fileRawData[p] < 128) {
+        dif = this._fileRawData[p];
         if (dif > 63) { dif = -1*(ZCJS.bitFlip(dif,6) + 1); }
         lastdiff = lastdiff + dif;
         time = time + Math.floor(params.timeFactor * lastdiff + 0.5);
@@ -142,11 +142,11 @@ class ZCJS {
         t++;
         p++;
       } else {
-        if (rawData[p] >= 224) {
+        if (this._fileRawData[p] >= 224) {
           if (fileType > 130) {
             if (p >= nBytes) {break;}
-            var c = rawData[p] & 3;
-            s = rawData[p+1];
+            var c = this._fileRawData[p] & 3;
+            s = this._fileRawData[p+1];
             if ((t+s-1) > 16384) { s=16384 - t;}
             for (var i = t; i < t+s; i++) {
               showDot[i]=c;
@@ -156,27 +156,27 @@ class ZCJS {
             //TODO: Filetype 130
           }
         } else {
-          if ((128 <= rawData[p]) && (rawData[p] <= 159)) {
+          if ((128 <= this._fileRawData[p]) && (this._fileRawData[p] <= 159)) {
             if ((p+1) >= nBytes) {break; }
-            dif = 256 * (rawData[p] & 31) + rawData[p+1];
+            dif = 256 * (this._fileRawData[p] & 31) + this._fileRawData[p+1];
             lastdiff = dif;
             time = time+ Math.floor(params.timeFactor*lastdiff + 0.5);
             timeData.push(time);
             t++;
             p += 2;
           } else {
-            if ((160 <= rawData[p]) && (rawData[p] <= 191)) {
+            if ((160 <= this._fileRawData[p]) && (this._fileRawData[p] <= 191)) {
               if ((p+2) >= nBytes) {break; }
-              dif = 256*256*(rawData[p] & 31) + 256*rawData[p+1] + rawData[p+2];
+              dif = 256*256*(this._fileRawData[p] & 31) + 256*this._fileRawData[p+1] + this._fileRawData[p+2];
               lastdiff  = dif;
               time = time + Math.floor(params.timeFactor*lastdiff + 0.5);
               timeData.push(time);
               t++;
               p += 3;
             } else {
-              if ((192 <= rawData[p]) && (rawData[p] <= 239)) {
+              if ((192 <= this._fileRawData[p]) && (this._fileRawData[p] <= 239)) {
                 if ((p+3) >= nBytes) {break; }
-                dif = 256*256*256*(rawData[p] & 31) + 256*256*rawData[p+1] + 256*rawData[p+2] + rawData[p+3];
+                dif = 256*256*256*(this._fileRawData[p] & 31) + 256*256*this._fileRawData[p+1] + 256*this._fileRawData[p+2] + this._fileRawData[p+3];
                 lastdiff = dif;
                 time = time + Math.floor(params.timeFactor*lastdiff + 0.5);
                 timeData.push(time);
