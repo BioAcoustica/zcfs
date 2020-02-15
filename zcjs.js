@@ -2,7 +2,11 @@
 class ZCJS {
   constructor(target) {
     this._target = document.getElementById(target);
-    this.plotMethod = "plotly";
+    if (target === undefined) {
+      this.plotMethod = null;
+    } else {
+      this.plotMethod = "plotly";
+    }
     this.stats = true;
     this._version = 1.0;
     this._fileVendor = null;
@@ -23,7 +27,7 @@ class ZCJS {
     this._time = time;
     this._freq = freq;
     if (this.x_compress) { this.do_x_compress(); };
-    this.plotZC();
+    if (this.plotMethod != null) { this.plotZC(); };
   }
 
   do_x_compress() {
@@ -70,8 +74,21 @@ class ZCJS {
 
   anabatHeader() {
     var head = this._fileRawData.slice(6,281);
-    var texthead = String.fromCharCode(head);
-    alert(head);
+    var str = '';
+    for (var i = 0; i < head.length; i++) {
+      str += '%' + ('0' + head[i].toString(16)).slice(-2);
+    }
+    str = decodeURIComponent(str);
+    var ret = {
+      tape:    str.substring(0,8),
+      date:    str.substring(8,16),
+      loc:     str.substring(16,56),
+      species: str.substring(56,106),
+      spec:    str.substring(106,122),
+      note:    str.substring(122,196),
+      note1:   str.substring(196,275)
+    }
+    return(ret);
   }
 
   sendStats(event) {
@@ -105,7 +122,7 @@ class ZCJS {
     var plotly_y_axis = {};
 
     if (this.x_range == "ms") {
-     plotly_x_axis = {range: [0, 900/plot_width]};
+     plotly_x_axis = {range: [0, 90/plot_width]};
     }
 
     if (this.y_range == "nonzero") {
