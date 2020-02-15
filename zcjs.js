@@ -124,7 +124,9 @@ class ZCJS {
     if (this.x_range == "ms") {
      plotly_x_axis = {range: [0, 90/plot_width]};
     }
-
+    if (Array.isArray(this.x_range)) {
+      plotly_x_axis = {range: [this.x_range[0], this.x_range[1]]};
+    }
     if (this.y_range == "nonzero") {
       plotly_y_axis = {fixedrange:this.y_fixed, range: [y_range_min, y_range_max]};
     }
