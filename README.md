@@ -75,6 +75,15 @@ p.x_compress = true;
 
 This process skews the time axis, so that values on that axis no longer relate to positions within the original file. For annotation purposes it is possible to use the properties `_c_time` and `_c_time_orig` to map to the original time.
 
+## Reading Anabat header information
+The example below just extracts the Anabat header data without plotting the file:
+
+```javascript
+p = new ZCJS();
+p.setURL("demo.ZC");
+var anabatHeaders = p.anabatHeader();
+```
+
 ## Background
 This library follows the R code [AnabatTools](http://peterwilson.id.au/Rcode/AnabatTools.R) by Peter Wilson to read Anabat data. This work itself was made possible by Chris Corben's documention of the [Anabat File Format](http://users.lmi.net/corben/fileform.htm#Anabat%20File%20Formats). This library was originally designed for visualising zero-crossing files for the [BioAcoustica](http://bio.acousti.ca) project. Hosting is provided by [audioBLAST](https://audioblast.org).
 
