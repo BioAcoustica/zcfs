@@ -91,8 +91,14 @@ p.y_fixed = false;
 Time compression removes periods where there is no acoustic activity. This is identified by a frequency value less than the lowest displayed when y_range is specified as an array, or otherwise below 0.001.
 
 ```javascript
+p.x_compress = false;
+```
+![x_compress = false](https://github.com/BioAcoustica/zcjs/blob/master/imgs/x_compress-false.png?raw=true "x_compress = false")
+
+```javascript
 p.x_compress = true;
 ```
+![x_compress = true](https://github.com/BioAcoustica/zcjs/blob/master/imgs/x_compress-true.png?raw=true "x_compress = true")
 
 This process skews the time axis, so that values on that axis no longer relate to positions within the original file. For annotation purposes it is possible to use the properties `_c_time` and `_c_time_orig` to map to the original time.
 
