@@ -47,18 +47,39 @@ The default setting for `x_range` is `"ms"` giving an expanded view of a zero-cr
 
 ```javascript
 p.x_range = "ms";
-p.x_range = "auto";
-p.x_range = [0,2.5];
 ```
+
+![x_range = ms](https://github.com/BioAcoustica/zcjs/blob/master/imgs/x_range-ms.png?raw=true "x_range = ms")
+
+```javascript
+p.x_range = "auto";
+```
+
+![x_range = auto](https://github.com/BioAcoustica/zcjs/blob/master/imgs/x_range-auto.png?raw=true "x_range = auto")
+
+```javascript
+p.x_range = [0,0.2];
+```
+
+![x_range = array](https://github.com/BioAcoustica/zcjs/blob/master/imgs/x_range-array.png?raw=true "x_range = array")
 
 ### y-axis
 The default setting for `y_range` is `"nonzero"` which fits the axis to the available screen height ignoring any zero values. A value of `"auto"` will fit all data into the plot. An array may be used to specify the initial range to display.
 
 ```javascript
 p.y_range = "nonzero";
+```
+![y_range = nonzero](https://github.com/BioAcoustica/zcjs/blob/master/imgs/y_range-nonzero.png?raw=true "y_range = nonzero")
+
+```javascript
 p.y_range = "auto";
+```
+![y_range = auto](https://github.com/BioAcoustica/zcjs/blob/master/imgs/y_range-auto.png?raw=true "y_range = auto")
+
+```javascript
 p.y_range = [10000,120000];
 ```
+![y_range = array](https://github.com/BioAcoustica/zcjs/blob/master/imgs/y_range-array.png?raw=true "y_range = array")
 
 By default zooming of the y axis is prevented, so the zoom functionality of the plots only zooms the time (x) axis. This may be changed as follows:
 
