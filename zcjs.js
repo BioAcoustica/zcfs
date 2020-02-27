@@ -100,7 +100,7 @@ class ZCJS {
       if (this._fileVendor != null) {
         path = path + "&fileVendor=" + this._fileVendor + "&fileVendorVersion=" + this._fileVendorVersion;
       }
-      var url = "https://api.audioblast.org/zcjs/stats/?" + path;
+      var url = "https://api.audioblast.org/stats/zcjs/?" + path;
       var req = new XMLHttpRequest();
       req.open("GET", url, true);
       req.send();
