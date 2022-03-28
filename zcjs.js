@@ -91,25 +91,8 @@ class ZCJS {
     return(ret);
   }
 
-  sendStats(event) {
-    if (this.stats) { 
-      var path = 'version=' + this._version;
-      if (event == "plot") {
-        path = path + '&plot=' + this.plotMethod;
-      }
-      if (this._fileVendor != null) {
-        path = path + "&fileVendor=" + this._fileVendor + "&fileVendorVersion=" + this._fileVendorVersion;
-      }
-      var url = "https://api.audioblast.org/stats/zcjs/?" + path;
-      var req = new XMLHttpRequest();
-      req.open("GET", url, true);
-      req.send();
-    }
-  }
-
   plotZC() {
     if (this.plotMethod == "plotly") {this.plotPlotly();}
-    this.sendStats("plot");
   }
 
   plotPlotly() {
