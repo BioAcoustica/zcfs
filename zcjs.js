@@ -117,7 +117,7 @@ class ZCJS {
       plotly_y_axis = {fixedrange:this.y_fixed, range: [this.y_range[0], this.y_range[1]]};
     }
 
-    Plotly.plot( zcplot,
+    Plotly.newPlot( zcplot,
         [{
            x: this.x_compress ? this._c_time : this._time,
            y: this.x_compress ? this._c_freq : this._freq,
